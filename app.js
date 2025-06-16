@@ -1,14 +1,3 @@
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js';
-import {
-    getFirestore,
-    collection,
-    getDocs,
-    addDoc,
-    doc,
-    deleteDoc,
-    updateDoc
-} from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js';
-console.log(" файл app.js загружен");
 // === Firebase config ===
 const firebaseConfig = {
     apiKey: "AIzaSyC31dbuZYH-lpDsdaAwP38cmPZLVXzlMNY",
@@ -21,11 +10,11 @@ const firebaseConfig = {
 };
 
 // === Инициализация Firebase ===
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+const app = firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore(app);
 
 // === Добавление товара ===
-async function addProduct() {
+window.addProduct = async function () {
     const name = document.getElementById('name').value.trim();
     const price = parseFloat(document.getElementById('price').value);
     const volume = document.getElementById('volume').value.trim();
@@ -36,7 +25,7 @@ async function addProduct() {
     }
 
     try {
-        await addDoc(collection(db, "products"), {
+        await db.collection("products").add({
             name,
             price,
             volume
@@ -51,7 +40,7 @@ async function addProduct() {
         console.error("❌ Ошибка добавления:", e);
         alert("Ошибка при добавлении товара");
     }
-}
+};
 
 // === Загрузка товаров ===
 async function loadProducts() {
@@ -59,7 +48,7 @@ async function loadProducts() {
     container.innerHTML = "<p>Загрузка...</p>";
 
     try {
-        const snapshot = await getDocs(collection(db, "products"));
+        const snapshot = await db.collection("products").get();
         container.innerHTML = "";
 
         if (snapshot.empty) {
@@ -75,7 +64,7 @@ async function loadProducts() {
                 <strong>${data.name}</strong><br/>
                 💰 Цена: ${data.price} ₽<br/>
                 📦 Объём: ${data.volume}<br/>
-                <button onclick="editProduct('${doc.id}')">Редактировать</button>
+                <button onclick="editProduct('${doc.id}', '${data.name}', ${data.price}, '${data.volume}')">Редактировать</button>
                 <button onclick="deleteProduct('${doc.id}')">Удалить</button>
             `;
             container.appendChild(div);
@@ -87,48 +76,44 @@ async function loadProducts() {
 }
 
 // === Удаление товара ===
-async function deleteProduct(productId) {
+window.deleteProduct = async function (productId) {
     if (!confirm("Вы уверены, что хотите удалить этот товар?")) return;
 
     try {
-        await deleteDoc(doc(db, "products", productId));
+        await db.collection("products").doc(productId).delete();
         alert("🗑️ Товар удален!");
         loadProducts();
     } catch (e) {
         console.error("❌ Ошибка удаления:", e);
         alert("Ошибка при удалении товара");
     }
-}
+};
 
-// === Редактирование товара (пример) ===
-async function editProduct(productId) {
-    const newName = prompt("Введите новое название:");
-    const newPrice = parseFloat(prompt("Введите новую цену:"));
-    const newVolume = prompt("Введите новый объём:");
+// === Редактирование товара ===
+window.editProduct = function (id, name, price, volume) {
+    const newName = prompt("Введите новое название", name);
+    const newPrice = parseFloat(prompt("Введите новую цену", price));
+    const newVolume = prompt("Введите новый объём", volume);
 
     if (!newName || isNaN(newPrice) || !newVolume) {
         alert("Все поля обязательны");
         return;
     }
 
-    try {
-        const productRef = doc(db, "products", productId);
-        await updateDoc(productRef, {
-            name: newName,
-            price: newPrice,
-            volume: newVolume
-        });
-
+    db.collection("products").doc(id).update({
+        name: newName,
+        price: newPrice,
+        volume: newVolume
+    }).then(() => {
         alert("✏️ Товар обновлён!");
         loadProducts();
-    } catch (e) {
+    }).catch(e => {
         console.error("❌ Ошибка обновления:", e);
         alert("Ошибка при обновлении товара");
-    }
-}
+    });
+};
 
 // === Автозагрузка при старте ===
 window.onload = () => {
     loadProducts();
 };
-console.log(" файл app.js загружен");
