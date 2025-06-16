@@ -14,6 +14,7 @@ const firebaseConfig = {
 // === Инициализация Firebase ===
 const app = firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore(app);
+console.log("Firebase initialized:", firebase);
 // === Добавление товара ===
 async function addProduct() {
     const name = document.getElementById('name').value.trim();
