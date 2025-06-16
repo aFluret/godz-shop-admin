@@ -13,7 +13,7 @@ const firebaseConfig = {
 };
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-
+console.log("admin.js loaded");
 // === Функция добавления товара ===
 async function addProduct() {
     const name = document.getElementById('name').value.trim();
