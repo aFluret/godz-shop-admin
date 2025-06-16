@@ -98,3 +98,4 @@ console.log("✅ admin.js загружен");
 function addProduct() {
     console.log("➕ addProduct вызван");
 }
+addProduct();
