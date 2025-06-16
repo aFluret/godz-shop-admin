@@ -1,4 +1,13 @@
-
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js';
+import {
+    getFirestore,
+    collection,
+    getDocs,
+    addDoc,
+    doc,
+    deleteDoc,
+    updateDoc
+} from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js';
 console.log(" файл app.js загружен");
 // === Firebase config ===
 const firebaseConfig = {
@@ -12,9 +21,9 @@ const firebaseConfig = {
 };
 
 // === Инициализация Firebase ===
-const app = firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore(app);
-console.log("Firebase initialized:", firebase);
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
 // === Добавление товара ===
 async function addProduct() {
     const name = document.getElementById('name').value.trim();
