@@ -80,7 +80,7 @@ if (typeof Telegram === 'undefined' || !Telegram.WebApp.initDataUnsafe?.user) {
     throw new Error("Telegram WebApp недоступен");
 }
 
-const allowedTelegramId = 123456789; // Замени на свой Telegram ID
+const allowedTelegramId = 424666580; // Замени на свой Telegram ID
 const user = Telegram.WebApp.initDataUnsafe.user;
 
 if (user.id !== allowedTelegramId) {
