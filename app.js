@@ -130,6 +130,5 @@ async function editProduct(productId) {
 // === Автозагрузка при старте ===
 window.onload = () => {
     loadProducts();
-    editProduct(1);
 };
 console.log(" файл app.js загружен");
