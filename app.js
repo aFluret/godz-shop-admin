@@ -8,7 +8,7 @@ import {
     deleteDoc,
     updateDoc
 } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js';
-
+console.log(" файл app.js загружен");
 // === Firebase config ===
 const firebaseConfig = {
     apiKey: "AIzaSyC31dbuZYH-lpDsdaAwP38cmPZLVXzlMNY",
@@ -131,3 +131,4 @@ async function editProduct(productId) {
 window.onload = () => {
     loadProducts();
 };
+console.log(" файл app.js загружен");
