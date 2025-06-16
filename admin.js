@@ -16,6 +16,7 @@ const db = getFirestore(app);
 console.log("admin.js loaded");
 // === Функция добавления товара ===
 async function addProduct() {
+    console.log("Add product function")
     const name = document.getElementById('name').value.trim();
     const price = parseFloat(document.getElementById('price').value);
     const volume = document.getElementById('volume').value.trim();
