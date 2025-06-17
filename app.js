@@ -13,41 +13,25 @@ const firebaseConfig = {
 const app = firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore(app);
 
-async function fetchImagesFromGitHub() {
-    const owner = 'aFluret'; // Замени на твой GitHub username
-    const repo = 'godz-shop-admin'; // Замени на название репозитория
 
-    try {
-        const response = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/products`, {
-            headers: {
-                Authorization: `token ${process.env.GITHUB_TOKEN}`
-            }
-        });
+async function fetchImagesFromServer() {
+    const response = await fetch('/api/upload');
+    const files = await response.json();
 
-        if (!response.ok) {
-            throw new Error(`Ошибка при получении списка файлов: ${response.status}`);
-        }
-
-        const files = await response.json();
-        return files;
-    } catch (error) {
-        console.error("Ошибка при получении списка файлов:", error);
-        alert("Не удалось получить список изображений");
-        return [];
-    }
+    return files.filter(file => file.type === 'file' && file.name.match(/\.(jpg|jpeg|png|gif)$/i));
 }
+
 async function populateImageSelect() {
     const imageSelect = document.getElementById('imageSelect');
-    const images = await fetchImagesFromGitHub();
+    const images = await fetchImagesFromServer();
 
     images.forEach(image => {
         const option = document.createElement('option');
         option.value = image.download_url; // URL изображения
-        option.textContent = image.name; // Имя файла
+        option.textContent = image.name;
         imageSelect.appendChild(option);
     });
 }
-
 
 // === Добавление товара ===
 window.addProduct = async function () {
