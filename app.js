@@ -12,7 +12,9 @@ const firebaseConfig = {
 // === Инициализация Firebase ===
 const app = firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore(app);
-const storage = firebase.storage(app);
+
+// === Настройка Cloudinary ===
+const cloudinary = window.cloudinary;
 
 // === Добавление товара ===
 window.addProduct = async function () {
@@ -20,23 +22,26 @@ window.addProduct = async function () {
     const price = parseFloat(document.getElementById('price').value);
     const volume = document.getElementById('volume').value.trim();
     const count = document.getElementById('count').value.trim();
-    const imageInput = document.getElementById('image');
     let imageUrl = null;
 
 
-    if (!name || !price || !volume || !count) {
+    if (!name || !price || !volume || isNaN(count)) {
         alert("Заполните все обязательные поля");
         return;
     }
 
-    if (imageInput.files.length > 0) {
-        const file = imageInput.files[0];
-        const storageRef = storage.ref(`products/${file.name}`);
-        await storageRef.put(file);
-        imageUrl = await storageRef.getDownloadURL();
-    }
 
     try {
+        const widget = cloudinary.createUploadWidget({
+            cloudName: 'dca7z8zex',
+            uploadPreset: 'ml_default'
+        }, (error, result) => {
+            if (!error && result && result.event === "success") {
+                imageUrl = result.info.secure_url; // Получаем URL изображения
+            }
+        });
+
+        widget.open();
         await db.collection("products").add({
             name,
             price,
