@@ -23,7 +23,7 @@
         const user = Telegram.WebApp.initDataUnsafe?.user;
     
         if (!user || user.id !== allowedTelegramId) {
-            document.body.innerHTML = `<h2>❌ Доступ запрещён</h2><p>Вы не авторизованы</p>`;
+            document.body.innerHTML = `<h1>❌ Доступ запрещён</h1><p>Вы не авторизованы</p>`;
             throw new Error("Доступ запрещён для пользователя с ID: " + user?.id);
         }
     </script>
