@@ -16,6 +16,16 @@ const db = firebase.firestore(app);
 // === Настройка Cloudinary ===
 const cloudinary = window.cloudinary;
 
+if (!cloudinary) {
+    console.error("Cloudinary SDK не загружен");
+    return;
+}
+
+if (!cloudinary.v2) {
+    console.error("Cloudinary v2 не доступен");
+    return;
+}
+
 // === Добавление товара ===
 window.addProduct = async function () {
     const name = document.getElementById('name').value.trim();
@@ -46,7 +56,6 @@ window.addProduct = async function () {
 
         imageUrl = result.secure_url; // Получаем URL изображения
 
-        widget.open();
         await db.collection("products").add({
             name,
             price,
