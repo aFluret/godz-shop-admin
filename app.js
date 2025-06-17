@@ -66,6 +66,10 @@ window.addProduct = async function () {
 
     try {
         imageUrl = await uploadImage(file);
+        if (!imageUrl) {
+            alert("Ошибка: URL изображения не получен");
+            return;
+        }
         await db.collection("products").add({
             name,
             price,
@@ -109,8 +113,8 @@ async function loadProducts() {
             <strong>${data.name}</strong><br/>
             💰 Цена: ${data.price} ₽<br/>
             📦 Объём: ${data.volume}<br/>
-            📊 Количество: ${data.quantity}<br/> <!-- Новое поле -->
-            <button onclick="editProduct('${doc.id}', '${data.name}', ${data.price}, '${data.volume}', ${data.quantity}, '${data.imageUrl}')">Редактировать</button>
+            📊 Количество: ${data.count}<br/> <!-- Новое поле -->
+            <button onclick="editProduct('${doc.id}', '${data.name}', ${data.price}, '${data.volume}', ${data.count}, '${data.imageUrl}')">Редактировать</button>
             <button onclick="deleteProduct('${doc.id}')">Удалить</button>
         `;
             container.appendChild(div);
