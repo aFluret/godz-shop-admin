@@ -29,17 +29,22 @@ window.addProduct = async function () {
         alert("Заполните все обязательные поля");
         return;
     }
+    const imageInput = document.getElementById('imageInput');
+    const file = imageInput.files[0];
+
+    if (!file) {
+        alert("Пожалуйста, выберите изображение.");
+        return;
+    }
 
 
     try {
-        const widget = cloudinary.createUploadWidget({
-            cloudName: 'dca7z8zex',
-            uploadPreset: 'ml_default'
-        }, (error, result) => {
-            if (!error && result && result.event === "success") {
-                imageUrl = result.info.secure_url; // Получаем URL изображения
-            }
+        // Загружаем изображение в Cloudinary
+        const result = await cloudinary.v2.uploader.upload(file, {
+            upload_preset: 'vfnmoxcj' // Замени на свой Upload Preset
         });
+
+        imageUrl = result.secure_url; // Получаем URL изображения
 
         widget.open();
         await db.collection("products").add({
