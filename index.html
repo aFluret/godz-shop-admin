@@ -13,6 +13,16 @@
    
 </head>
 <body>
+    <!-- index.html -->
+    <div id="custom-prompt" style="display:none; position:fixed; top:20%; left:50%; transform:translate(-50%, -50%); background:#fff; padding:20px; border-radius:8px; box-shadow:0 0 10px rgba(0,0,0,0.2);">
+    <p id="custom-prompt-text">Введите значение:</p>
+    <input type="text" id="custom-prompt-input" />
+    <button onclick="submitCustomPrompt()">Подтвердить</button>
+    </div>
+    <div id="custom-alert" style="display:none; position:fixed; top:20%; left:50%; transform:translate(-50%, -50%); background:#fff; padding:20px; border-radius:8px; box-shadow:0 0 10px rgba(0,0,0,0.2);">
+        <p id="custom-alert-text"></p>
+        <button onclick="closeCustomAlert()">Ок</button>
+    </div>
     <h1>📦 Админ-панель</h1>
 
     <h2>Добавить товар</h2>

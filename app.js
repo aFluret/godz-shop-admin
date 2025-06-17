@@ -61,13 +61,13 @@ window.addProduct = async function () {
     const selectedImageUrl = imageSelect.value;
 
     if (!name || !price || !volume || isNaN(count)) {
-        alert("Заполните все обязательные поля");
+        customAlert("Заполните все обязательные поля");
         return;
     }
 
 
     if (!selectedImageUrl) {
-        alert("Выберите изображение");
+        customAlert("Выберите изображение");
         return;
     }
 
@@ -82,7 +82,7 @@ window.addProduct = async function () {
             imageUrl: selectedImageUrl
         });
 
-        alert("✅ Товар добавлен!");
+        customAlert("✅ Товар добавлен!");
         document.getElementById('name').value = "";
         document.getElementById('price').value = "";
         document.getElementById('volume').value = "";
@@ -90,7 +90,7 @@ window.addProduct = async function () {
         loadProducts(); // Обновляем список
     } catch (e) {
         console.error("❌ Ошибка добавления:", e);
-        alert("Ошибка при добавлении товара");
+        customAlert("Ошибка при добавлении товара");
     }
 };
 
@@ -135,24 +135,24 @@ window.deleteProduct = async function (productId) {
 
     try {
         await db.collection("products").doc(productId).delete();
-        alert("🗑️ Товар удален!");
+        customAlert("🗑️ Товар удален!");
         loadProducts();
     } catch (e) {
         console.error("❌ Ошибка удаления:", e);
-        alert("Ошибка при удалении товара");
+        customAlert("Ошибка при удалении товара");
     }
 };
 
 // === Редактирование товара ===
 window.editProduct = function (id, name, price, volume,count) {
-    const newName = prompt("Введите новое название", name);
-    const newPrice = parseFloat(prompt("Введите новую цену", price));
-    const newVolume = prompt("Введите новый объём", volume);
-    const newCount = parseInt(prompt("Введите новое количество", count));
+    const newName = customPrompt("Введите новое название", name);
+    const newPrice = parseFloat(customPrompt("Введите новую цену", price));
+    const newVolume = customPrompt("Введите новый объём", volume);
+    const newCount = parseInt(customPrompt("Введите новое количество", count));
 
 
     if (!newName || isNaN(newPrice) || !newVolume || isNaN(newCount)) {
-        alert("Все поля обязательны");
+        customAlert("Все поля обязательны");
         return;
     }
 
@@ -162,13 +162,49 @@ window.editProduct = function (id, name, price, volume,count) {
         volume: newVolume,
         count: newCount
     }).then(() => {
-        alert("✏️ Товар обновлён!");
+        customAlert("✏️ Товар обновлён!");
         loadProducts();
     }).catch(e => {
         console.error("❌ Ошибка обновления:", e);
-        alert("Ошибка при обновлении товара");
+        customAlert("Ошибка при обновлении товара");
     });
 };
+let promptCallback = null;
+
+function customPrompt(message, defaultValue = "") {
+    const promptDiv = document.getElementById('custom-prompt');
+    const promptText = document.getElementById('custom-prompt-text');
+    const input = document.getElementById('custom-prompt-input');
+
+    promptText.textContent = message;
+    input.value = defaultValue;
+    promptDiv.style.display = 'block';
+
+    return new Promise(resolve => {
+        promptCallback = (value) => resolve(value);
+    });
+}
+
+function submitCustomPrompt() {
+    const value = document.getElementById('custom-prompt-input').value;
+    document.getElementById('custom-prompt').style.display = 'none';
+
+    if (promptCallback) {
+        promptCallback(value);
+        promptCallback = null;
+    }
+}
+function customAlert(message) {
+    const alertDiv = document.getElementById('custom-alert');
+    const alertText = document.getElementById('custom-alert-text');
+
+    alertText.textContent = message;
+    alertDiv.style.display = 'block';
+}
+
+function closeCustomAlert() {
+    document.getElementById('custom-alert').style.display = 'none';
+}
 
 // === Автозагрузка при старте ===
 window.onload = async() => {
