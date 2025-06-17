@@ -85,6 +85,7 @@ async function loadProducts() {
                 <strong>${data.name}</strong><br/>
                 💰 Цена: ${data.price} ₽<br/>
                 📦 Объём: ${data.volume}<br/>
+                📊 Количество: ${data.quantity}<br/>
                 <button onclick="editProduct('${doc.id}', '${data.name}', ${data.price}, '${data.volume}')">Редактировать</button>
                 <button onclick="deleteProduct('${doc.id}')">Удалить</button>
             `;
