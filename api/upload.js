@@ -13,6 +13,8 @@ export default async function handler(req, res) {
     });
 
     try {
+        console.log("Попытка загрузить файл:", filename);
+
         // Получаем текущее содержимое файла (если он уже существует)
         const repoData = await octokit.repos.getContent({
             owner: process.env.GITHUB_REPO_OWNER,
@@ -23,6 +25,8 @@ export default async function handler(req, res) {
 
         // Преобразуем DataURL в Base64
         const base64Content = Buffer.from(file.split(',')[1], 'base64').toString('base64');
+
+        console.log("Загружаем файл на GitHub...");
 
         // Загружаем файл в GitHub
         await octokit.repos.createOrUpdateFile({
@@ -35,8 +39,12 @@ export default async function handler(req, res) {
             branch: 'main'
         });
 
+        console.log("Файл успешно загружен на GitHub");
+
         // Формируем URL через Vercel CDN
         const imageUrl = `https://${process.env.GITHUB_REPO_NAME}-${process.env.GITHUB_REPO_OWNER}.vercel.app/products/${filename}`;
+
+        console.log("Сформирован URL:", imageUrl);
 
         res.status(200).json({ url: imageUrl });
     } catch (error) {
