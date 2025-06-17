@@ -13,7 +13,34 @@ const firebaseConfig = {
 const app = firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore(app);
 
+async function uploadImage(file) {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
 
+    return new Promise((resolve, reject) => {
+        reader.onload = async () => {
+            try {
+                const response = await fetch('/api/upload', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        file: reader.result,
+                        filename: file.name
+                    })
+                });
+
+                const result = await response.json();
+
+                resolve(result.url);
+            } catch (e) {
+                reject(e);
+            }
+        };
+        reader.onerror = () => reject(reader.error);
+    });
+}
 
 // === Добавление товара ===
 window.addProduct = async function () {
@@ -38,28 +65,13 @@ window.addProduct = async function () {
 
 
     try {
-        // Загружаем изображение на Vercel
-        const formData = new FormData();
-        formData.append('file', file);
-
-        const response = await fetch('https://api.vercel.com/v1/storage/upload', {
-            method: 'POST',
-            body: formData,
-            headers: {
-                Authorization: `nfZNyoEnrUPoycfqGiclMRfa`, // Токен Vercel
-            },
-        });
-
-        const result = await response.json();
-        imageUrl = result.url; // Получаем URL изображения
- 
-
+        imageUrl = await uploadImage(file);
         await db.collection("products").add({
             name,
             price,
             volume,
             count,
-            imageUrl: imageUrl || null
+            imageUrl
         });
 
         alert("✅ Товар добавлен!");
