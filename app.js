@@ -9,20 +9,21 @@ const firebaseConfig = {
     measurementId: "G-TNDBXFRZYD"
 };
 // Проверка наличия Telegram WebApp
-if (typeof Telegram === 'undefined') {
-    document.body.innerHTML = "<h2>❌ Админка доступна только через Telegram</h2>";
-    throw new Error("Telegram WebApp недоступен");
-}
+// if (typeof Telegram === 'undefined') {
 
-Telegram.WebApp.ready();
+//     document.body.innerHTML = "<h2>❌ Админка доступна только через Telegram</h2>";
+//     throw new Error("Telegram WebApp недоступен");
+// }
 
-const allowedTelegramId = 424666580; // Замени на свой Telegram ID
-const user = Telegram.WebApp.initDataUnsafe?.user;
+// Telegram.WebApp.ready();
 
-if (!user || user.id !== allowedTelegramId) {
-    document.body.innerHTML = `<h1>❌ Доступ запрещён</h1><p>Вы не авторизованы</p>`;
-    throw new Error("Доступ запрещён для пользователя с ID: " + user?.id);
-}
+// const allowedTelegramId = 424666580; // Замени на свой Telegram ID
+// const user = Telegram.WebApp.initDataUnsafe?.user;
+
+// if (!user || user.id !== allowedTelegramId) {
+//     document.body.innerHTML = `<h1>❌ Доступ запрещён</h1><p>Вы не авторизованы</p>`;
+//     throw new Error("Доступ запрещён для пользователя с ID: " + user?.id);
+// }
 
 // === Инициализация Firebase ===
 const app = firebase.initializeApp(firebaseConfig);
