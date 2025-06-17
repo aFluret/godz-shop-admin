@@ -12,29 +12,44 @@ const firebaseConfig = {
 // === Инициализация Firebase ===
 const app = firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore(app);
+const storage = firebase.storage(app);
 
 // === Добавление товара ===
 window.addProduct = async function () {
     const name = document.getElementById('name').value.trim();
     const price = parseFloat(document.getElementById('price').value);
     const volume = document.getElementById('volume').value.trim();
+    const count = document.getElementById('count').value.trim();
+    const imageInput = document.getElementById('image');
+    let imageUrl = null;
 
-    if (!name || !price || !volume) {
+
+    if (!name || !price || !volume || !count) {
         alert("Заполните все обязательные поля");
         return;
+    }
+
+    if (imageInput.files.length > 0) {
+        const file = imageInput.files[0];
+        const storageRef = storage.ref(`products/${file.name}`);
+        await storageRef.put(file);
+        imageUrl = await storageRef.getDownloadURL();
     }
 
     try {
         await db.collection("products").add({
             name,
             price,
-            volume
+            volume,
+            count,
+            imageUrl: imageUrl || null
         });
 
         alert("✅ Товар добавлен!");
         document.getElementById('name').value = "";
         document.getElementById('price').value = "";
         document.getElementById('volume').value = "";
+        document.getElementById('count').value = "";
         loadProducts(); // Обновляем список
     } catch (e) {
         console.error("❌ Ошибка добавления:", e);
@@ -61,6 +76,7 @@ async function loadProducts() {
             const div = document.createElement('div');
             div.className = 'product';
             div.innerHTML = `
+                <img src="${data.imageUrl || '/placeholder.png'}" alt="${data.name}" width="50" height="50" /> 
                 <strong>${data.name}</strong><br/>
                 💰 Цена: ${data.price} ₽<br/>
                 📦 Объём: ${data.volume}<br/>
@@ -90,12 +106,14 @@ window.deleteProduct = async function (productId) {
 };
 
 // === Редактирование товара ===
-window.editProduct = function (id, name, price, volume) {
+window.editProduct = function (id, name, price, volume,count) {
     const newName = prompt("Введите новое название", name);
     const newPrice = parseFloat(prompt("Введите новую цену", price));
     const newVolume = prompt("Введите новый объём", volume);
+    const newCount = parseInt(prompt("Введите новое количество", count));
 
-    if (!newName || isNaN(newPrice) || !newVolume) {
+
+    if (!newName || isNaN(newPrice) || !newVolume || isNaN(newCount)) {
         alert("Все поля обязательны");
         return;
     }
@@ -103,7 +121,8 @@ window.editProduct = function (id, name, price, volume) {
     db.collection("products").doc(id).update({
         name: newName,
         price: newPrice,
-        volume: newVolume
+        volume: newVolume,
+        count: newCount
     }).then(() => {
         alert("✏️ Товар обновлён!");
         loadProducts();

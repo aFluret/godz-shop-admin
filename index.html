@@ -8,6 +8,8 @@
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script> 
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script> 
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage-compat.js"></script> 
+
 
     <!-- Локальный скрипт -->
     <script defer src="app.js"></script>
@@ -19,6 +21,8 @@
     <input type="text" id="name" placeholder="Название" />
     <input type="number" id="price" placeholder="Цена" />
     <input type="text" id="volume" placeholder="Объём" />
+    <input type="number" id="count" placeholder="Количество" />
+    <input type="file" id="image" accept="image/*" />
     <button onclick="addProduct()">Добавить</button>
 
     <h2>Текущие товары</h2>
