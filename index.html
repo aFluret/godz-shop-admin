@@ -13,20 +13,32 @@
    
 </head>
 <body>
+    
 
+  <!-- index.html -->
+<div id="auth-screen" style="display:block; position:fixed; top:0; left:0; width:100%; height:100%; background:#fff; z-index:9999;">
+    <div style="position: absolute; top:50%; left:50%; transform: translate(-50%, -50%);">
+        <h2>🔐 Введите пароль</h2>
+        <input type="password" id="admin-password" placeholder="Пароль">
+        <button onclick="checkPassword()">Войти</button>
+        <p id="auth-error" style="color:red;"></p>
+    </div>
+</div>
+
+<!-- Основной контент админки -->
+<div id="main-content" style="display:none;">
+    <!-- Твой интерфейс админки -->
     <h1>📦 Админ-панель</h1>
-
     <h2>Добавить товар</h2>
     <input type="text" id="name" placeholder="Название" />
     <input type="number" id="price" placeholder="Цена" />
     <input type="text" id="volume" placeholder="Объём" />
-    <input type="number" id="count" placeholder="Количество" />
-    <select id="imageSelect">
-        <option value="">Выберите изображение</option>
-    </select>
+    <input type="number" id="quantity" placeholder="Количество" />
+    <input type="file" id="imageInput" accept="image/*" />
     <button onclick="addProduct()">Добавить</button>
 
     <h2>Текущие товары</h2>
     <div id="products-list">Загрузка...</div>
+</div>
 </body>
 </html>

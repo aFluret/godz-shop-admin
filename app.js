@@ -169,6 +169,24 @@ window.editProduct = function (id, name, price, volume,count) {
         alert("Ошибка при обновлении товара");
     });
 };
+const correctPassword = "godz_shop_admin"; // Замени на свой пароль
+
+function checkPassword() {
+    const input = document.getElementById('admin-password').value;
+    const errorText = document.getElementById('auth-error');
+
+    if (input === correctPassword) {
+        document.getElementById('auth-screen').style.display = 'none';
+        document.getElementById('main-content').style.display = 'block';
+
+        // Запуск загрузки товаров
+        window.onload = () => {
+            loadProducts();
+        };
+    } else {
+        errorText.textContent = "❌ Неверный пароль";
+    }
+}
 
 // === Автозагрузка при старте ===
 window.onload = async() => {
