@@ -13,18 +13,7 @@ const firebaseConfig = {
 const app = firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore(app);
 
-// === Настройка Cloudinary ===
-const cloudinary = window.cloudinary;
 
-if (!cloudinary) {
-    console.error("Cloudinary SDK не загружен");
-    return;
-}
-
-if (!cloudinary.v2) {
-    console.error("Cloudinary v2 не доступен");
-    return;
-}
 
 // === Добавление товара ===
 window.addProduct = async function () {
@@ -49,12 +38,7 @@ window.addProduct = async function () {
 
 
     try {
-        // Загружаем изображение в Cloudinary
-        const result = await cloudinary.v2.uploader.upload(file, {
-            upload_preset: 'vfnmoxcj' // Замени на свой Upload Preset
-        });
-
-        imageUrl = result.secure_url; // Получаем URL изображения
+ 
 
         await db.collection("products").add({
             name,
