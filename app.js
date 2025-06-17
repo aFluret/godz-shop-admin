@@ -82,7 +82,6 @@ async function loadProducts() {
             div.className = 'product';
             div.innerHTML = `
                 <img src="${data.imageUrl || '/placeholder.png'}" alt="${data.name}" width="50" height="50" /> 
-                <strong>${data.name}</strong><br/>
                 💰 Цена: ${data.price} ₽<br/>
                 📦 Объём: ${data.volume}<br/>
                 📊 Количество: ${data.quantity}<br/>
