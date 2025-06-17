@@ -15,7 +15,7 @@ const db = firebase.firestore(app);
 
 async function fetchImagesFromGitHub() {
     const owner = 'aFluret'; // Замени на твой GitHub username
-    const repo = 'admin-godz-shop'; // Замени на название репозитория
+    const repo = 'godz-shop-admin'; // Замени на название репозитория
 
     try {
         const response = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/products`, {
