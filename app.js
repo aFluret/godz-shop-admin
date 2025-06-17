@@ -8,6 +8,21 @@ const firebaseConfig = {
     appId: "1:66348051875:web:40c998cae87f83c557be16",
     measurementId: "G-TNDBXFRZYD"
 };
+// Проверка наличия Telegram WebApp
+if (typeof Telegram === 'undefined') {
+    document.body.innerHTML = "<h2>❌ Админка доступна только через Telegram</h2>";
+    throw new Error("Telegram WebApp недоступен");
+}
+
+Telegram.WebApp.ready();
+
+const allowedTelegramId = 424666580; // Замени на свой Telegram ID
+const user = Telegram.WebApp.initDataUnsafe?.user;
+
+if (!user || user.id !== allowedTelegramId) {
+    document.body.innerHTML = `<h1>❌ Доступ запрещён</h1><p>Вы не авторизованы</p>`;
+    throw new Error("Доступ запрещён для пользователя с ID: " + user?.id);
+}
 
 // === Инициализация Firebase ===
 const app = firebase.initializeApp(firebaseConfig);

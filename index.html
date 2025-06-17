@@ -10,23 +10,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script> 
     <!-- Локальный скрипт -->
     <script defer src="app.js"></script>
-    <script>
-        // Проверка наличия Telegram WebApp
-        if (typeof Telegram === 'undefined') {
-            document.body.innerHTML = "<h2>❌ Админка доступна только через Telegram</h2>";
-            throw new Error("Telegram WebApp недоступен");
-        }
-    
-        Telegram.WebApp.ready();
-    
-        const allowedTelegramId = 424666580; // Замени на свой Telegram ID
-        const user = Telegram.WebApp.initDataUnsafe?.user;
-    
-        if (!user || user.id !== allowedTelegramId) {
-            document.body.innerHTML = `<h1>❌ Доступ запрещён</h1><p>Вы не авторизованы</p>`;
-            throw new Error("Доступ запрещён для пользователя с ID: " + user?.id);
-        }
-    </script>
+   
 </head>
 <body>
     <h1>📦 Админ-панель</h1>
