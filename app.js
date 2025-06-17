@@ -38,6 +38,20 @@ window.addProduct = async function () {
 
 
     try {
+        // Загружаем изображение на Vercel
+        const formData = new FormData();
+        formData.append('file', file);
+
+        const response = await fetch('https://api.vercel.com/v1/storage/upload', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                Authorization: `nfZNyoEnrUPoycfqGiclMRfa`, // Токен Vercel
+            },
+        });
+
+        const result = await response.json();
+        imageUrl = result.url; // Получаем URL изображения
  
 
         await db.collection("products").add({
@@ -79,13 +93,14 @@ async function loadProducts() {
             const div = document.createElement('div');
             div.className = 'product';
             div.innerHTML = `
-                <img src="${data.imageUrl || '/placeholder.png'}" alt="${data.name}" width="50" height="50" /> 
-                💰 Цена: ${data.price} ₽<br/>
-                📦 Объём: ${data.volume}<br/>
-                📊 Количество: ${data.quantity}<br/>
-                <button onclick="editProduct('${doc.id}', '${data.name}', ${data.price}, '${data.volume}')">Редактировать</button>
-                <button onclick="deleteProduct('${doc.id}')">Удалить</button>
-            `;
+            <img src="${data.imageUrl || '/placeholder.png'}" alt="${data.name}" width="50" height="50" />
+            <strong>${data.name}</strong><br/>
+            💰 Цена: ${data.price} ₽<br/>
+            📦 Объём: ${data.volume}<br/>
+            📊 Количество: ${data.quantity}<br/> <!-- Новое поле -->
+            <button onclick="editProduct('${doc.id}', '${data.name}', ${data.price}, '${data.volume}', ${data.quantity}, '${data.imageUrl}')">Редактировать</button>
+            <button onclick="deleteProduct('${doc.id}')">Удалить</button>
+        `;
             container.appendChild(div);
         });
     } catch (e) {
