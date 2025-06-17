@@ -156,7 +156,7 @@ window.editProduct = function (id, name, price, volume,count) {
 };
 
 // === Автозагрузка при старте ===
-window.onload = () => {
+window.onload = async() => {
     loadProducts();
-    populateImageSelect();
+    await populateImageSelect();
 };
