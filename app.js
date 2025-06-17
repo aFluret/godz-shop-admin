@@ -48,8 +48,7 @@ window.addProduct = async function () {
         alert("Заполните все обязательные поля");
         return;
     }
-    const imageInput = document.getElementById('imageInput');
-    const file = imageInput.files[0];
+
 
     if (!selectedImageUrl) {
         alert("Выберите изображение");
