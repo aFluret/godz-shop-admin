@@ -48,10 +48,7 @@ async function populateImageSelect() {
     });
 }
 
-// Вызываем при загрузке страницы
-window.onload = async () => {
-    populateImageSelect();
-};
+
 // === Добавление товара ===
 window.addProduct = async function () {
     const name = document.getElementById('name').value.trim();
@@ -117,7 +114,7 @@ async function loadProducts() {
             const div = document.createElement('div');
             div.className = 'product';
             div.innerHTML = `
-            <img src="${data.imageUrl || '/placeholder.png'}" alt="${data.name}" width="50" height="50" />
+            <img src="${data.imageUrl}" alt="${data.name}" width="50" height="50" />
             <strong>${data.name}</strong><br/>
             💰 Цена: ${data.price} ₽<br/>
             📦 Объём: ${data.volume}<br/>
@@ -177,4 +174,5 @@ window.editProduct = function (id, name, price, volume,count) {
 // === Автозагрузка при старте ===
 window.onload = () => {
     loadProducts();
+    populateImageSelect();
 };
