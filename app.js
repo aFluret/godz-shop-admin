@@ -13,35 +13,45 @@ const firebaseConfig = {
 const app = firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore(app);
 
-async function uploadImage(file) {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
+async function fetchImagesFromGitHub() {
+    const owner = 'aFluret'; // Замени на твой GitHub username
+    const repo = 'admin-godz-shop'; // Замени на название репозитория
 
-    return new Promise((resolve, reject) => {
-        reader.onload = async () => {
-            try {
-                const response = await fetch('/api/upload', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        file: reader.result,
-                        filename: file.name
-                    })
-                });
-
-                const result = await response.json();
-
-                resolve(result.url);
-            } catch (e) {
-                reject(e);
+    try {
+        const response = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/products`, {
+            headers: {
+                Authorization: `token ${process.env.GITHUB_TOKEN}`
             }
-        };
-        reader.onerror = () => reject(reader.error);
+        });
+
+        if (!response.ok) {
+            throw new Error(`Ошибка при получении списка файлов: ${response.status}`);
+        }
+
+        const files = await response.json();
+        return files;
+    } catch (error) {
+        console.error("Ошибка при получении списка файлов:", error);
+        alert("Не удалось получить список изображений");
+        return [];
+    }
+}
+async function populateImageSelect() {
+    const imageSelect = document.getElementById('imageSelect');
+    const images = await fetchImagesFromGitHub();
+
+    images.forEach(image => {
+        const option = document.createElement('option');
+        option.value = image.download_url; // URL изображения
+        option.textContent = image.name; // Имя файла
+        imageSelect.appendChild(option);
     });
 }
 
+// Вызываем при загрузке страницы
+window.onload = async () => {
+    populateImageSelect();
+};
 // === Добавление товара ===
 window.addProduct = async function () {
     const name = document.getElementById('name').value.trim();
@@ -50,6 +60,8 @@ window.addProduct = async function () {
     const count = document.getElementById('count').value.trim();
     let imageUrl = null;
 
+    const imageSelect = document.getElementById('imageSelect');
+    const selectedImageUrl = imageSelect.value;
 
     if (!name || !price || !volume || isNaN(count)) {
         alert("Заполните все обязательные поля");
@@ -58,24 +70,20 @@ window.addProduct = async function () {
     const imageInput = document.getElementById('imageInput');
     const file = imageInput.files[0];
 
-    if (!file) {
-        alert("Пожалуйста, выберите изображение.");
+    if (!selectedImageUrl) {
+        alert("Выберите изображение");
         return;
     }
 
 
     try {
-        imageUrl = await uploadImage(file);
-        if (!imageUrl) {
-            alert("Ошибка: URL изображения не получен");
-            return;
-        }
+       
         await db.collection("products").add({
             name,
             price,
             volume,
             count,
-            imageUrl
+            imageUrl: selectedImageUrl
         });
 
         alert("✅ Товар добавлен!");
