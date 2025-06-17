@@ -89,7 +89,7 @@ window.addProduct = async function () {
         document.getElementById('count').value = "";
         loadProducts(); // Обновляем список
     } catch (e) {
-        console.error("❌ Ошибка добавления:", e);
+        console.customError("❌ Ошибка добавления:", e);
         customAlert("Ошибка при добавлении товара");
     }
 };
@@ -124,21 +124,21 @@ async function loadProducts() {
             container.appendChild(div);
         });
     } catch (e) {
-        console.error("❌ Ошибка загрузки:", e);
+        console.customAlert("❌ Ошибка загрузки:", e);
         container.innerHTML = "<p>Ошибка загрузки данных</p>";
     }
 }
 
 // === Удаление товара ===
 window.deleteProduct = async function (productId) {
-    if (!confirm("Вы уверены, что хотите удалить этот товар?")) return;
+    if (!customConfirm("Вы уверены, что хотите удалить этот товар?")) return;
 
     try {
         await db.collection("products").doc(productId).delete();
         customAlert("🗑️ Товар удален!");
         loadProducts();
     } catch (e) {
-        console.error("❌ Ошибка удаления:", e);
+        console.customError("❌ Ошибка удаления:", e);
         customAlert("Ошибка при удалении товара");
     }
 };
@@ -165,7 +165,7 @@ window.editProduct = function (id, name, price, volume,count) {
         customAlert("✏️ Товар обновлён!");
         loadProducts();
     }).catch(e => {
-        console.error("❌ Ошибка обновления:", e);
+        console.customError("❌ Ошибка обновления:", e);
         customAlert("Ошибка при обновлении товара");
     });
 };
@@ -184,7 +184,29 @@ function customPrompt(message, defaultValue = "") {
         promptCallback = (value) => resolve(value);
     });
 }
+let confirmCallback = null;
 
+function customConfirm(message) {
+    const dialogDiv = document.getElementById('custom-dialog');
+    const dialogText = document.getElementById('custom-dialog-text');
+
+    dialogText.textContent = message;
+    dialogDiv.style.display = 'block';
+
+    return new Promise(resolve => {
+        confirmCallback = result => {
+            dialogDiv.style.display = 'none';
+            resolve(result);
+        };
+    });
+}
+
+function handleCustomDialog(result) {
+    if (confirmCallback) {
+        confirmCallback(result);
+        confirmCallback = null;
+    }
+}
 function submitCustomPrompt() {
     const value = document.getElementById('custom-prompt-input').value;
     document.getElementById('custom-prompt').style.display = 'none';
@@ -204,6 +226,17 @@ function customAlert(message) {
 
 function closeCustomAlert() {
     document.getElementById('custom-alert').style.display = 'none';
+}
+function customError(message) {
+    const dialogDiv = document.getElementById('custom-dialog');
+    const dialogText = document.getElementById('custom-dialog-text');
+
+    dialogText.textContent = message;
+    dialogDiv.style.display = 'block';
+
+    setTimeout(() => {
+        dialogDiv.style.display = 'none';
+    }, 3000); // Закрываем через 3 секунды
 }
 
 // === Автозагрузка при старте ===
