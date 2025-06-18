@@ -54,7 +54,7 @@ window.addProduct = async function () {
     const name = document.getElementById('name').value.trim();
     const price = parseFloat(document.getElementById('price').value);
     const volume = document.getElementById('volume').value.trim();
-    const count = parseInt(document.getElementById('count'));
+    const count = parseInt(document.getElementById('count').value);
     let imageUrl = null;
 
     const imageSelect = document.getElementById('imageSelect');
