@@ -54,7 +54,7 @@ window.addProduct = async function () {
     const name = document.getElementById('name').value.trim();
     const price = parseFloat(document.getElementById('price').value);
     const volume = document.getElementById('volume').value.trim();
-    const count = document.getElementById('count').value.trim();
+    const count = parseInt(document.getElementById('count'));
     let imageUrl = null;
 
     const imageSelect = document.getElementById('imageSelect');
@@ -169,24 +169,6 @@ window.editProduct = function (id, name, price, volume,count) {
         alert("Ошибка при обновлении товара");
     });
 };
-const correctPassword = "godz_shop_admin"; // Замени на свой пароль
-
-function checkPassword() {
-    const input = document.getElementById('admin-password').value;
-    const errorText = document.getElementById('auth-error');
-
-    if (input === correctPassword) {
-        document.getElementById('auth-screen').style.display = 'none';
-        document.getElementById('main-content').style.display = 'block';
-
-        // Запуск загрузки товаров
-        window.onload = () => {
-            loadProducts();
-        };
-    } else {
-        errorText.textContent = "❌ Неверный пароль";
-    }
-}
 
 // === Автозагрузка при старте ===
 window.onload = async() => {
